@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit member' if member else 'Add member' }}{% endblock %}
+{% block content %}
+<div class="panel" style="max-width:520px">
+  <h1>{{ 'Edit member' if member else 'Add member' }}</h1>
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="field"><label for="n">Full name</label>
+      <input id="n" name="full_name" required value="{{ request.form.get('full_name', member.full_name if member else '') }}"></div>
+    <div class="field"><label for="p">Phone number</label>
+      <input id="p" name="phone" inputmode="tel" required placeholder="0712 345 678"
+             value="{{ request.form.get('phone', member.phone if member else '') }}"></div>
+    <div class="field"><label for="f">Fellowship</label>
+      {% set current = (request.form.get('fellowship_id', type=int) if request.method=='POST' else (member.fellowship_id if member else None)) %}
+      <select id="f" name="fellowship_id">
+        <option value="">None</option>
+        {% for f in fellowships %}<option value="{{ f.id }}" {% if current==f.id %}selected{% endif %}>{{ f.name }}</option>{% endfor %}
+      </select></div>
+    <div class="actions"><button type="submit">Save member</button>
+      <a class="btn ghost" href="{{ url_for('members') }}">Cancel</a></div>
+  </form>
+</div>
+{% endblock %}

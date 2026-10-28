@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Fellowships{% endblock %}
+{% block content %}
+<h1>Fellowships Management</h1>
+
+<div class="panel" style="margin-bottom: 1.5rem;">
+  <h2>Add New Fellowship</h2>
+  <form method="post" class="row">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="grow"><label for="n">Fellowship Name</label><input id="n" name="name" required placeholder="e.g. Young Adults"></div>
+    <div class="grow"><label for="c">Chairperson's Full Name</label><input id="c" name="chairperson" placeholder="e.g. John Kamau"></div>
+    <div class="grow"><label for="p">Chairperson's Phone</label><input id="p" name="phone_number" placeholder="e.g. 0712345678"></div>
+    <div><button type="submit" style="margin-top: 1.6rem;">Add Fellowship</button></div>
+  </form>
+</div>
+
+<div class="panel scroll">
+  <h2>Existing Fellowships</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Fellowship Name</th>
+        <th>Chairperson</th>
+        <th>Phone Number</th>
+        <th>Members Count</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for f in fellowships %}
+      <tr>
+        <td><strong>{{ f.name }}</strong></td>
+        <td>{{ f.chairperson or '—' }}</td>
+        <td>{{ f.phone_number or '—' }}</td>
+        <td><span class="count">{{ f.members|length }} members</span></td>
+        <td>
+          <div class="actions">
+            <a class="btn small ghost" href="{{ url_for('fellowship_edit', fid=f.id) }}">Edit / Rename</a>
+            <form method="post" action="{{ url_for('fellowship_delete', fid=f.id) }}" style="margin:0"
+                  onsubmit='return confirm({{ ("Delete " ~ f.name ~ "? Note: Fellowships with members cannot be deleted.")|tojson }})'>
+              <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+              <button class="danger small" type="submit">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="muted">No fellowships found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

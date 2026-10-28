@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Members{% endblock %}
+{% block content %}
+<div class="row" style="justify-content:space-between;align-items:center">
+  <h1 style="margin:0">Members <span class="muted count">{{ members|length }} of {{ total }}</span></h1>
+  <div class="actions">
+    <a class="btn ghost" href="{{ url_for('export_members') }}">Download CSV</a>
+    <a class="btn" href="{{ url_for('member_new') }}">Add member</a>
+  </div>
+</div>
+
+<form method="get" class="row">
+  <div class="grow"><label for="q">Search name or phone</label><input id="q" name="q" value="{{ q }}"></div>
+  <div class="grow"><label for="f">Fellowship</label>
+    <select id="f" name="fellowship">
+      <option value="">All fellowships</option>
+      {% for f in fellowships %}<option value="{{ f.id }}" {% if fid==f.id %}selected{% endif %}>{{ f.name }}</option>{% endfor %}
+    </select></div>
+  <button type="submit">Search</button>
+</form>
+
+<div class="panel scroll">
+{% if members %}
+<table>
+  <thead><tr><th>Name</th><th>Phone</th><th>Fellowship</th><th></th></tr></thead>
+  <tbody>
+  {% for m in members %}
+  <tr>
+    <td>{{ m.full_name }}</td>
+    <td>{{ m.phone }}</td>
+    <td>{{ m.fellowship.name if m.fellowship else '—' }}</td>
+    <td><div class="actions">
+      <a class="btn ghost small" href="{{ url_for('member_edit', member_id=m.id) }}">Edit</a>
+      <form method="post" action="{{ url_for('member_delete', member_id=m.id) }}"
+            onsubmit='return confirm({{ ("Delete " ~ m.full_name ~ "?")|tojson }})'>
+        <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+        <button class="danger small" type="submit">Delete</button>
+      </form>
+    </div></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p class="muted" style="margin:0">No members found. Add one, or import your existing list from a CSV file.</p>
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Import members{% endblock %}
+{% block content %}
+<div class="panel" style="max-width:560px">
+  <h1>Import members</h1>
+  <p>Upload a CSV file with a header row and these columns:</p>
+  <p><code>Name, Phone, Fellowship</code></p>
+  <p class="muted">Phone numbers like 0712345678 or +254712345678 both work. Fellowships that don't exist yet are created for you. Numbers already in the system are skipped. In Excel or Google Sheets, use File → Save as / Download → CSV.</p>
+  <form method="post" enctype="multipart/form-data">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="field"><label for="file">CSV file</label><input id="file" type="file" name="file" accept=".csv,text/csv" required></div>
+    <button type="submit">Import members</button>
+  </form>
+</div>
+{% endblock %}

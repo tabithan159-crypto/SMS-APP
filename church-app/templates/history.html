@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}History{% endblock %}
+{% block content %}
+<h1>Message history</h1>
+<div class="panel scroll">
+{% if messages %}
+<table>
+  <thead><tr><th>Sent</th><th>To</th><th>Message</th><th>Reached</th><th>Status</th><th>By</th></tr></thead>
+  <tbody>
+  {% for m in messages %}
+  <tr><td>{{ m.sent_at.strftime('%d %b %Y %H:%M') }} UTC</td><td>{{ m.target }}</td><td>{{ m.text }}</td>
+      <td>{{ m.recipients }}</td><td>{{ m.status }}</td><td>{{ m.sent_by or '—' }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% else %}<p class="muted" style="margin:0">No messages sent yet.</p>{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Log in · AIPCA Thika Cathedral Software{% endblock %}
+{% block content %}
+<div class="narrow panel">
+  <h1 style="text-align: center; font-size: 1.4rem; color: #7b2142;">AIPCA THIKA CATHEDRAL SOFTWARE</h1>
+  <p class="muted" style="text-align: center; margin-bottom: 1.5rem;">Administrator Login</p>
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="field"><label for="u">Username</label><input id="u" name="username" autocomplete="username" required autofocus></div>
+    <div class="field"><label for="p">Password</label><input id="p" name="password" type="password" autocomplete="current-password" required></div>
+    <button type="submit" style="width: 100%;">Log in</button>
+  </form>
+</div>
+{% endblock %}

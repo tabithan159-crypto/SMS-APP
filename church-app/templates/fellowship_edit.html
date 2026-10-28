@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Edit Fellowship{% endblock %}
+{% block content %}
+<div class="panel" style="max-width:520px; margin: 0 auto;">
+  <h1>Edit Fellowship: {{ fellowship.name }}</h1>
+  <form method="post">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="field">
+      <label for="name">Fellowship Name (Rename)</label>
+      <input id="name" name="name" required value="{{ fellowship.name }}">
+    </div>
+    <div class="field">
+      <label for="chairperson">Chairperson's Full Name</label>
+      <input id="chairperson" name="chairperson" value="{{ fellowship.chairperson or '' }}">
+    </div>
+    <div class="field">
+      <label for="phone_number">Chairperson's Phone Number</label>
+      <input id="phone_number" name="phone_number" value="{{ fellowship.phone_number or '' }}" placeholder="0712 345 678">
+    </div>
+    <div class="actions">
+      <button type="submit">Save Changes</button>
+      <a class="btn ghost" href="{{ url_for('fellowships') }}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

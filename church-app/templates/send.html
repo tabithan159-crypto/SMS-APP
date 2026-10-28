@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Send message{% endblock %}
+{% block content %}
+<h1>Send message</h1>
+{% if provider == 'console' %}
+<div class="flash error">Test mode: messages are only printed in the server window and nothing is sent. Set SMS_PROVIDER to send real SMS.</div>
+{% endif %}
+<div class="panel" style="max-width:640px">
+  <form method="post" id="sendform">
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <div class="field"><label for="t">Send to</label>
+      <select id="t" name="target">
+        <option value="all" data-count="{{ total }}">Everyone ({{ total }})</option>
+        {% for f in fellowships %}<option value="{{ f.id }}" data-count="{{ counts[f.id] }}">{{ f.name }} ({{ counts[f.id] }})</option>{% endfor %}
+      </select></div>
+    <div class="field"><label for="m">Message</label>
+      <textarea id="m" name="text" required maxlength="640"></textarea>
+      <div class="muted count" id="len">0 characters · 0 SMS per person</div></div>
+    <button type="submit">Send message</button>
+  </form>
+</div>
+<script>
+  const box = document.getElementById('m'), info = document.getElementById('len'),
+        sel = document.getElementById('t'), form = document.getElementById('sendform');
+  box.addEventListener('input', () => {
+    const n = box.value.length, parts = n === 0 ? 0 : Math.ceil(n / 160);
+    info.textContent = n + ' characters · ' + parts + ' SMS per person';
+  });
+  form.addEventListener('submit', e => {
+    const opt = sel.options[sel.selectedIndex];
+    if (!confirm('Send this message to ' + opt.text + '?')) e.preventDefault();
+  });
+</script>
+{% endblock %}
